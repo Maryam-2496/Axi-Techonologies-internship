@@ -13,22 +13,27 @@ db.init_app(app)
 
 app.register_blueprint(user_bp)
 
+
 # ---- Global Error Handling Middleware ----
 @app.errorhandler(400)
 def bad_request(e):
     return jsonify({"success": False, "error": "Bad request - check your input"}), 400
 
+
 @app.errorhandler(404)
 def not_found(e):
     return jsonify({"success": False, "error": "Resource not found"}), 404
+
 
 @app.errorhandler(500)
 def server_error(e):
     return jsonify({"success": False, "error": "Internal server error"}), 500
 
+
 @app.errorhandler(Exception)
 def handle_unexpected_error(e):
     return jsonify({"success": False, "error": str(e)}), 500
+
 
 if __name__ == "__main__":
     with app.app_context():

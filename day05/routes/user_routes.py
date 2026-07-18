@@ -3,6 +3,7 @@ from models.user_model import db, User
 
 user_bp = Blueprint("users", __name__)
 
+
 @user_bp.route("/users", methods=["POST"])
 def create_user():
     data = request.json
@@ -18,10 +19,12 @@ def create_user():
     db.session.commit()
     return jsonify({"success": True, "data": new_user.to_dict()}), 201
 
+
 @user_bp.route("/users", methods=["GET"])
 def get_all_users():
     all_users = User.query.all()
     return jsonify({"success": True, "data": [user.to_dict() for user in all_users]})
+
 
 @user_bp.route("/users/<int:id>", methods=["GET"])
 def get_single_user(id):
@@ -29,6 +32,7 @@ def get_single_user(id):
     if not user:
         return jsonify({"success": False, "error": "User not found"}), 404
     return jsonify({"success": True, "data": user.to_dict()})
+
 
 @user_bp.route("/users/<int:id>", methods=["PUT"])
 def update_user(id):
@@ -42,6 +46,7 @@ def update_user(id):
     user.email = data.get("email", user.email)
     db.session.commit()
     return jsonify({"success": True, "data": user.to_dict()})
+
 
 @user_bp.route("/users/<int:id>", methods=["DELETE"])
 def delete_user(id):
