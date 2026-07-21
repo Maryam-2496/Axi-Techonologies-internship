@@ -5,6 +5,7 @@ from models.user_model import db, User
 auth_bp = Blueprint("auth", __name__)
 bcrypt = Bcrypt()
 
+
 @auth_bp.route("/auth/register", methods=["POST"])
 def register():
     data = request.get_json()
@@ -27,3 +28,21 @@ def register():
     db.session.commit()
 
     return jsonify(new_user.to_dict()), 201
+
+
+@auth_bp.route("/auth/login", methods=["POST"])
+def login():
+    data = request.get_json()
+
+    email = data.get("email")
+    password = data.get("password")
+
+    if not email or not password:
+        return jsonify({"error": "email and password are required"}), 400
+
+    user = User.query.filter_by(email=email).first()
+
+    if not user or not bcrypt.check_password_hash(user.password_hash, password):
+        return jsonify({"error": "Invalid email or password"}), 401
+
+    return jsonify(user.to_dict()), 200
