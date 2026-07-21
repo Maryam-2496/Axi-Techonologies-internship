@@ -11,3 +11,4 @@ Each `dayXX/` folder contains that day's `app.py`, notes, and screenshots.
 - Day 3 — In-Memory Database & CRUD Operations: implemented a temporary users database, auto-increment IDs, CRUD (Create, Read, Update, Delete) APIs, and tested endpoints using Postman.
 - Day 4 — Real Database (SQLite + SQLAlchemy): schema, migrations, full CRUD against disk-backed storage, verified persistence across restarts.
 - Day 5 — Production Readiness: global error handling, modular architecture, linting, edge-case testing, and PR workflow practice. Week 1 complete!
+- Day 6 – Authentication & Password Security: added password_hash to the User model, hashed passwords with bcrypt on registration, built /auth/register and /auth/login with generic 401 errors, and implemented JWT generation (1-hour expiry) on successful login.
