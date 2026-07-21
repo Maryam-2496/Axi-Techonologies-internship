@@ -1,3 +1,6 @@
+import os
+import jwt
+from datetime import datetime, timedelta, timezone
 from flask import Blueprint, request, jsonify
 from flask_bcrypt import Bcrypt
 from models.user_model import db, User
@@ -45,4 +48,11 @@ def login():
     if not user or not bcrypt.check_password_hash(user.password_hash, password):
         return jsonify({"error": "Invalid email or password"}), 401
 
-    return jsonify(user.to_dict()), 200
+    token_payload = {
+        "userId": user.id,
+        "email": user.email,
+        "exp": datetime.now(timezone.utc) + timedelta(hours=1),
+    }
+    token = jwt.encode(token_payload, os.environ.get("JWT_SECRET"), algorithm="HS256")
+
+    return jsonify({"token": token, "user": user.to_dict()}), 200
