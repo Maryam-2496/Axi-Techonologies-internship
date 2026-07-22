@@ -4,6 +4,7 @@ from datetime import datetime, timedelta, timezone
 from flask import Blueprint, request, jsonify
 from flask_bcrypt import Bcrypt
 from models.user_model import db, User
+from middleware.auth_middleware import authenticate_token
 
 auth_bp = Blueprint("auth", __name__)
 bcrypt = Bcrypt()
@@ -56,3 +57,14 @@ def login():
     token = jwt.encode(token_payload, os.environ.get("JWT_SECRET"), algorithm="HS256")
 
     return jsonify({"token": token, "user": user.to_dict()}), 200
+
+
+@auth_bp.route("/auth/me", methods=["GET"])
+@authenticate_token
+def get_current_user():
+    user = User.query.get(request.user["userId"])
+
+    if not user:
+        return jsonify({"error": "User not found"}), 404
+
+    return jsonify(user.to_dict()), 200
