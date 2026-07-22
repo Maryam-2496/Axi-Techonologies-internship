@@ -52,6 +52,7 @@ def login():
     token_payload = {
         "userId": user.id,
         "email": user.email,
+       # "exp": datetime.now(timezone.utc) + timedelta(seconds=5),
         "exp": datetime.now(timezone.utc) + timedelta(hours=1),
     }
     token = jwt.encode(token_payload, os.environ.get("JWT_SECRET"), algorithm="HS256")
@@ -68,3 +69,34 @@ def get_current_user():
         return jsonify({"error": "User not found"}), 404
 
     return jsonify(user.to_dict()), 200
+
+@auth_bp.route("/auth/me", methods=["PUT"])
+@authenticate_token
+def update_current_user():
+    user = User.query.get(request.user["userId"])
+
+    if not user:
+        return jsonify({"error": "User not found"}), 404
+
+    data = request.get_json()
+    name = data.get("name")
+
+    if name:
+        user.name = name
+        db.session.commit()
+
+    return jsonify(user.to_dict()), 200
+
+
+@auth_bp.route("/auth/me", methods=["DELETE"])
+@authenticate_token
+def delete_current_user():
+    user = User.query.get(request.user["userId"])
+
+    if not user:
+        return jsonify({"error": "User not found"}), 404
+
+    db.session.delete(user)
+    db.session.commit()
+
+    return jsonify({"message": "Account deleted"}), 200
