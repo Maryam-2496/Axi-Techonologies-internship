@@ -1,5 +1,6 @@
-from flask import Blueprint, jsonify
+from flask import Blueprint, jsonify, request
 from sqlalchemy import text
+from flask_jwt_extended import jwt_required, get_jwt_identity
 from models.user import db, User
 from models.post import Post
 
@@ -35,3 +36,14 @@ def get_users_posts_join():
     """))
     rows = [dict(row._mapping) for row in result]
     return jsonify(rows)
+
+
+@post_bp.route("/posts", methods=["POST"])
+@jwt_required()
+def create_post():
+    user_id = get_jwt_identity()
+    data = request.get_json()
+    new_post = Post(title=data["title"], content=data["content"], user_id=user_id)
+    db.session.add(new_post)
+    db.session.commit()
+    return jsonify({"id": new_post.id, "title": new_post.title}), 201

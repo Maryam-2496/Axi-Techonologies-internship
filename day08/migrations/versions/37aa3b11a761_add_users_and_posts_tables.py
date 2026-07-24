@@ -1,8 +1,8 @@
 """add users and posts tables
 
-Revision ID: 328f12f4d4d1
+Revision ID: 37aa3b11a761
 Revises: 
-Create Date: 2026-07-24 17:29:08.623057
+Create Date: 2026-07-24 19:17:11.791599
 
 """
 from alembic import op
@@ -10,7 +10,7 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision = '328f12f4d4d1'
+revision = '37aa3b11a761'
 down_revision = None
 branch_labels = None
 depends_on = None
@@ -32,8 +32,9 @@ def upgrade():
     sa.Column('title', sa.String(length=150), nullable=False),
     sa.Column('content', sa.Text(), nullable=False),
     sa.Column('created_at', sa.DateTime(), nullable=True),
+    sa.Column('updated_at', sa.DateTime(), nullable=True),
     sa.Column('user_id', sa.Integer(), nullable=False),
-    sa.ForeignKeyConstraint(['user_id'], ['users.id'], ),
+    sa.ForeignKeyConstraint(['user_id'], ['users.id'], ondelete='CASCADE'),
     sa.PrimaryKeyConstraint('id')
     )
     # ### end Alembic commands ###
