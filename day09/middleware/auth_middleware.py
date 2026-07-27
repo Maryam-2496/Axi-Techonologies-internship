@@ -22,4 +22,4 @@ def authenticate_token(f):
             return jsonify({"error": "Invalid token"}), 403
 
         return f(*args, **kwargs)
-    return decorateds
+    return decorated
