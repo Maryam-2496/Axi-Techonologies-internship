@@ -56,3 +56,5 @@ if __name__ == "__main__":
     )
     # socketio.run(app, port=3000, debug=False, use_reloader=False)
     # socketio.run(app, port=3000, debug=True)
+
+this is not valid python
