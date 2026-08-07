@@ -78,3 +78,22 @@ jobs:
           tags: |
             ghcr.io/maryam-2496/axi-internship-day14:latest
             ghcr.io/maryam-2496/axi-internship-day14:${{ steps.vars.outputs.sha_short }}
+
+  deploy:
+    needs: build-and-push
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/main'
+
+    steps:
+      - name: Deploy to server via SSH
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.SERVER_HOST }}
+          username: ${{ secrets.SERVER_USER }}
+          key: ${{ secrets.SERVER_SSH_KEY }}
+          script: |
+            cd /opt/axi-app
+            docker compose pull
+            docker compose up -d --no-deps --build
+            docker compose exec -T app flask db upgrade
+            docker image prune -f
