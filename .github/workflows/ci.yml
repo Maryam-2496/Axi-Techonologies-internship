@@ -28,4 +28,9 @@ jobs:
       - name: Lint with flake8
         working-directory: day14
         run: |
-          flake8 . --max-line-length=120 --exclude=venv,__pycache__ --statistics    
+          flake8 . --max-line-length=120 --exclude=venv,__pycache__ --statistics
+
+      - name: Run tests with pytest
+        working-directory: day14
+        run: |
+          pytest -v
