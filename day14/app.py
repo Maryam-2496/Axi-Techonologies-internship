@@ -4,10 +4,9 @@ from dotenv import load_dotenv
 from models.user_model import db
 from routes.auth_routes import auth_bp
 from flask_talisman import Talisman
-from extensions import limiter
 from flasgger import Swagger
-from extensions import limiter, redis_client, task_queue, socketio
-import socket_events
+from extensions import limiter, redis_client, task_queue, socketio  # noqa: F401
+import socket_events  # noqa: F401
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 load_dotenv(os.path.join(BASE_DIR, ".env"))
