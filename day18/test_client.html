@@ -15,7 +15,7 @@
   <div id="log" style="border:1px solid #ccc; padding:10px; height:300px; overflow-y:scroll;"></div>
 
   <script>
-    const socket = io("http://localhost:3000", { transports: ["polling"], upgrade: false, query: { token: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEsImVtYWlsIjoic29ja2V0dGVzdEBleGFtcGxlLmNvbSIsImV4cCI6MTc4NTc2Mjc1MX0.jkNH2CwHFmLTn5EsRDe8gk6wJT_FnpRs442-0ykF710" } });
+    const socket = io("http://localhost:3000", { transports: ["polling"], upgrade: false, query: { token: "" } });
     const log = document.getElementById("log");
 
     function addLog(msg) {

@@ -7,6 +7,20 @@ on:
     branches: [main]
 
 jobs:
+  secret-scan:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Run TruffleHog secret scan
+        uses: trufflesecurity/trufflehog@main
+        with:
+          path: ./
+          extra_args: --only-verified
+
   test:
     runs-on: ubuntu-latest
 
@@ -97,3 +111,9 @@ jobs:
             docker compose up -d --no-deps --build
             docker compose exec -T app flask db upgrade
             docker image prune -f
+
+  # NOTE: This deploy job is fully configured and ready to run, but is currently
+  # unverified against a live server, since no cloud VM was provisioned for this
+  # internship exercise. SERVER_HOST/USER/SSH_KEY secrets are not yet set in
+  # this repository. The workflow will simply skip/fail at the SSH step until
+  # those are added and a real server is available.
