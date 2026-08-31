@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Socket.IO Test Client</title>
+  <script src="https://cdn.socket.io/4.7.2/socket.io.min.js"></script>
+</head>
+<body>
+  <h2>Socket.IO Test Client</h2>
+  <input id="roomInput" placeholder="Room name (e.g. chat_room_101)" />
+  <button onclick="joinRoom()">Join Room</button>
+  <br><br>
+  <input id="messageInput" placeholder="Type a message" />
+  <button onclick="sendMessage()">Send</button>
+  <br><br>
+  <div id="log" style="border:1px solid #ccc; padding:10px; height:300px; overflow-y:scroll;"></div>
+
+  <script>
+    const socket = io("http://localhost:3000", { transports: ["polling"], upgrade: false, query: { token: "" } });
+    const log = document.getElementById("log");
+
+    function addLog(msg) {
+      log.innerHTML += "<div>" + msg + "</div>";
+      log.scrollTop = log.scrollHeight;
+    }
+
+    socket.on("connect", () => addLog("Connected to server!"));
+    socket.on("disconnect", () => addLog("Disconnected from server."));
+    socket.on("server_message", (data) => addLog("[Server]: " + data.msg));
+    socket.on("receive_message", (data) => addLog("[Message]: " + data.message));
+
+    function joinRoom() {
+      const room = document.getElementById("roomInput").value;
+      socket.emit("join_room", { room: room });
+    }
+
+    function sendMessage() {
+      const room = document.getElementById("roomInput").value;
+      const message = document.getElementById("messageInput").value;
+      socket.emit("send_message", { room: room, message: message });
+    }
+  </script>
+</body>
+</html>
